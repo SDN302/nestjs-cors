@@ -1,39 +1,54 @@
 import React, { useEffect, useState } from 'react';
-import { List } from 'antd';
+import axios from 'axios';
+import { Card, List, Typography, Row, Col } from 'antd';
 
 export interface Book {
     title: string;
     author: string;
 }
+
 const BookList: React.FC = () => {
     const [books, setBooks] = useState<Book[]>([]);
+
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                const response = await fetch(import.meta.env.VITE_BACKEND_URL);
-                const data = await response.json();
-                setBooks(data);
+                const response = await axios.get(import.meta.env.VITE_BACKEND_URL); 
+                setBooks(response.data);
             } catch (error) {
                 console.error('Error fetching books:', error);
             }
         };
         fetchBooks();
     }, []);
+
     return (
-        <div>
-            <h1>Book List</h1>
-            <List
-                grid={{ gutter: 16, column: 4 }}
-                dataSource={books}
-                renderItem={book => (
-                    <List.Item>
-                        <h2 title={book.title}>
-                            <p>{book.author}</p>
-                        </h2>
-                    </List.Item>
-                )}
-            />
-        </div>
+        <Row justify="center" align="middle" style={{ padding: '20px' }}>
+            <Col xs={24} sm={20} md={16} lg={12}>
+                <Typography.Title level={1} style={{ textAlign: 'center', marginBottom: '30px' }}>Book List</Typography.Title>
+                <Card>
+                    <List
+                        dataSource={books}
+                        renderItem={book => (
+                            <List.Item style={{ width: '100%' }}>
+                                <Card
+                                    type="inner"
+                                    title={<Typography.Title level={4} style={{ margin: 0 }}>{book.title}</Typography.Title>}
+                                    style={{
+                                        width: '100%',
+                                        borderRadius: '10px',
+                                        marginBottom: '16px',
+                                    }}
+                                >
+                                    <Typography.Text type="secondary">Author: {book.author}</Typography.Text>
+                                </Card>
+                            </List.Item>
+                        )}
+                    />
+                </Card>
+            </Col>
+        </Row>
     );
 };
+
 export default BookList;
