@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import { List } from 'antd';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+export interface Book {
+    title: string;
+    author: string;
 }
-
-export default App
+const BookList: React.FC = () => {
+    const [books, setBooks] = useState<Book[]>([]);
+    useEffect(() => {
+        const fetchBooks = async () => {
+            try {
+                const response = await fetch(import.meta.env.VITE_BACKEND_URL);
+                const data = await response.json();
+                setBooks(data);
+            } catch (error) {
+                console.error('Error fetching books:', error);
+            }
+        };
+        fetchBooks();
+    }, []);
+    return (
+        <div>
+            <h1>Book List</h1>
+            <List
+                grid={{ gutter: 16, column: 4 }}
+                dataSource={books}
+                renderItem={book => (
+                    <List.Item>
+                        <h2 title={book.title}>
+                            <p>{book.author}</p>
+                        </h2>
+                    </List.Item>
+                )}
+            />
+        </div>
+    );
+};
+export default BookList;
