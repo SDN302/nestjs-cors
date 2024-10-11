@@ -9,12 +9,12 @@ export interface Book {
 
 const BookList: React.FC = () => {
     const [books, setBooks] = useState<Book[]>([]);
-    const [loading, setLoading] = useState<boolean>(true); // Thêm state loading
+    const [loading, setLoading] = useState<boolean>(true); 
 
     useEffect(() => {
         const fetchBooks = async () => {
             try {
-                setLoading(true); // Bắt đầu loading
+                setLoading(true); 
                 const response = await axios.get(import.meta.env.VITE_BACKEND_URL); 
                 setBooks(response.data);
             } catch (error) {
