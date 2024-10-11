@@ -1,35 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Card, List, Typography, Row, Col } from 'antd';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+export interface Book {
+    title: string;
+    author: string;
 }
 
-export default App
+const BookList: React.FC = () => {
+    const [books, setBooks] = useState<Book[]>([]);
+
+    useEffect(() => {
+        const fetchBooks = async () => {
+            try {
+                const response = await axios.get(import.meta.env.VITE_BACKEND_URL); 
+                setBooks(response.data);
+            } catch (error) {
+                console.error('Error fetching books:', error);
+            }
+        };
+        fetchBooks();
+    }, []);
+
+    return (
+        <Row justify="center" align="middle" style={{ padding: '20px' }}>
+            <Col xs={24} sm={20} md={16} lg={12}>
+                <Typography.Title level={1} style={{ textAlign: 'center', marginBottom: '30px' }}>Book List</Typography.Title>
+                <Card>
+                    <List
+                        dataSource={books}
+                        renderItem={book => (
+                            <List.Item style={{ width: '100%' }}>
+                                <Card
+                                    type="inner"
+                                    title={<Typography.Title level={4} style={{ margin: 0 }}>{book.title}</Typography.Title>}
+                                    style={{
+                                        width: '100%',
+                                        borderRadius: '10px',
+                                        marginBottom: '16px',
+                                    }}
+                                >
+                                    <Typography.Text type="secondary">Author: {book.author}</Typography.Text>
+                                </Card>
+                            </List.Item>
+                        )}
+                    />
+                </Card>
+            </Col>
+        </Row>
+    );
+};
+
+export default BookList;
