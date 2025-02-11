@@ -1,5 +1,11 @@
 # CORS Configuration for NestJS with React
 
+## 📢 Advertisement
+
+<img src="https://raw.githubusercontent.com/fptqnk17/.github/refs/heads/main/images/banner-bao-thu.png" alt="Advertisement" />
+
+---
+
 ## Introduction
 
 Cross-Origin Resource Sharing (CORS) is a security feature that allows or restricts resources requested from a different domain. When developing applications with NestJS and React, you may need to configure CORS to enable communication between the frontend (React) and the backend (NestJS).
